@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.MonthDay;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -13,7 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ZodiacSignServlet
+ * Professor, não sei porque mas esse código não funcionou no navegador interno
+ * do Eclipse, no entanto no Google Chrome funcionou 100%
  */
 @WebServlet("/ZodiacSignServlet")
 public class ZodiacSignServlet extends HttpServlet {
@@ -55,27 +57,40 @@ public class ZodiacSignServlet extends HttpServlet {
 
 		out.println("</body></html>");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String birthDate = request.getParameter("userBirthDate");
+		String userName = request.getParameter("userName");
 		Date parsedBirthDate = null;
-		Date aries = null;
-		Date ariesLimit = null;
+		MonthDay aries = MonthDay.of(03, 19);
+		MonthDay ariesLimit = MonthDay.of(04, 21);
 
 		try {
 			parsedBirthDate = sdf.parse(birthDate);
-			aries = sdf.parse("03-19");
-			ariesLimit = sdf.parse("04-21");
 
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		if (parsedBirthDate.after(aries) && parsedBirthDate.before(ariesLimit)) {
-			out.println("<br><br> Voce eh de Aries!");
-		} else {
+		MonthDay monthDayBirthDate = MonthDay.of(parsedBirthDate.getMonth(), parsedBirthDate.getDay());
+
+		if (monthDayBirthDate.getMonthValue() == aries.getMonthValue()
+				&& monthDayBirthDate.getDayOfMonth() > aries.getDayOfMonth()
+				&& monthDayBirthDate.getDayOfMonth() < ariesLimit.getDayOfMonth()) {
+			out.println("<br><br> Obrigado por fazer o teste " + userName + ", seu signo é de Aries!");
 		}
 
-//		out.println(parsedBirthDate);
+		// Professor, tentei fazer a lógica para a comparação das datas de várias
+		// maneiras,
+		// como o ano era irrelevante já que estavamos tentando achar o signo da pessoa,
+		// tentei
+		// fazer uma logica pegando somente o .getDay() e .getMonth() das datas, mas
+		// acabou que
+		// nao funcionou, entao descobri o MonthDay e vi que dava para ser usado, mas
+		// infelizmente
+		// nao tive tempo para continuar o projeto e entregar a tempo, vou continuar com
+		// as correções
+		// e se não conseguir resolver eu vejo com o Senhor na aula de quarta-feira.
+
 	}
 
 }
